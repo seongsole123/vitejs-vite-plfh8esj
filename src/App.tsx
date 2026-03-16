@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 
 const MAKE_PROMPT = (color: string, material: string) =>
-  `same building same structure same windows same shape, exterior wall surface repainted with ${color} ${material} steel panels, keep all windows doors architectural details exactly the same, do not change building shape or structure, realistic photo`;
+  `architectural renovation photo of same building, same windows same doors same layout same roofline, exterior walls completely re-clad with ${color} ${material} steel panels with visible panel joints and seams, realistic steel cladding texture, professional architectural photography, before and after renovation style, keep identical building structure`;
 
 const PRODUCTS = [
   { id:"g1", name:"PosMAC® 아이언그레이",  cat:"도금강판", hex:"#6b7280", energySave:12, co2:8.4,  prompt:MAKE_PROMPT("iron gray","metallic zinc-aluminum alloy") },
@@ -40,9 +40,9 @@ async function urlToFile(url: string): Promise<File> {
 async function searchAndReplace(imageFile: File, productPrompt: string, apiKey: string): Promise<string> {
   const form = new FormData();
   form.append("image", imageFile);
-  form.append("prompt", productPrompt + ", photorealistic, architectural photography, high quality, preserve all windows and doors");
-  form.append("search_prompt", "exterior wall surface cladding facade material");
-  form.append("negative_prompt", "remove windows, remove doors, change building shape, change structure, blurry, cartoon, low quality");
+  form.append("prompt", productPrompt + ", photorealistic, 8k, high quality architectural photo");
+  form.append("search_prompt", "building exterior wall facade cladding surface bricks paint");
+  form.append("negative_prompt", "missing windows, no windows, removed doors, changed roofline, different building, blurry, cartoon, low quality, distorted");
   form.append("output_format", "jpeg");
 
   const res = await fetch("/api/stability-proxy", {
