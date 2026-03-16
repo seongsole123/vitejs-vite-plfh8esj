@@ -11,11 +11,12 @@ export default async (request) => {
 
   try {
     const stabilityKey = request.headers.get("X-Stability-Key");
-    const mode = request.headers.get("X-Stability-Mode") || "search-replace";
+    const mode = request.headers.get("X-Stability-Mode") || "inpaint";
     const formData = await request.formData();
 
-    const endpoint = mode === "structure"
-      ? "https://api.stability.ai/v2beta/stable-image/control/structure"
+    // inpaint = building mask + change only masked area
+    const endpoint = mode === "inpaint"
+      ? "https://api.stability.ai/v2beta/stable-image/edit/inpaint"
       : "https://api.stability.ai/v2beta/stable-image/edit/search-and-replace";
 
     const response = await fetch(endpoint, {
