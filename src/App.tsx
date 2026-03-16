@@ -1,23 +1,26 @@
 import { useState, useRef, useCallback } from "react";
 
+const MAKE_PROMPT = (color: string, material: string) =>
+  `same building same structure same windows same shape, exterior wall surface repainted with ${color} ${material} steel panels, keep all windows doors architectural details exactly the same, do not change building shape or structure, realistic photo`;
+
 const PRODUCTS = [
-  { id:"g1", name:"PosMAC® 아이언그레이",  cat:"도금강판", hex:"#6b7280", energySave:12, co2:8.4,  prompt:"iron gray metallic steel cladding panels on building exterior wall, zinc-aluminum alloy architectural facade, industrial look" },
-  { id:"g2", name:"PosMAC® 실버메탈",      cat:"도금강판", hex:"#c0cad2", energySave:14, co2:9.8,  prompt:"shiny silver metallic steel facade panels on building wall, aluminum-zinc alloy cladding, modern architecture" },
-  { id:"g3", name:"PosMAC® 샴페인골드",    cat:"도금강판", hex:"#c9a96e", energySave:10, co2:7.1,  prompt:"champagne gold metallic steel cladding on building exterior wall, luxury golden tone architectural facade panels" },
-  { id:"g4", name:"PosMAC® 브론즈메탈",    cat:"도금강판", hex:"#7d5a3c", energySave:11, co2:7.7,  prompt:"bronze metallic steel facade panels on building exterior wall, warm brown architectural cladding, classic style" },
-  { id:"g5", name:"갈바륨 내추럴실버",     cat:"도금강판", hex:"#a8b4b8", energySave:13, co2:9.1,  prompt:"galvalume natural silver matte steel panels on building wall, aluminum-zinc coating, industrial architecture facade" },
-  { id:"c1", name:"쿨루프 크림화이트",     cat:"컬러강판", hex:"#f2ede4", energySave:28, co2:19.6, prompt:"cream white color coated steel wall panels on building exterior, cool roof cladding, clean bright facade, high reflectance" },
-  { id:"c2", name:"스카이블루",            cat:"컬러강판", hex:"#4a90c4", energySave:18, co2:12.6, prompt:"sky blue color coated steel cladding panels on building exterior wall, bright blue PVDF coated architectural facade" },
-  { id:"c3", name:"딥네이비",             cat:"컬러강판", hex:"#1e2d5a", energySave:8,  co2:5.6,  prompt:"deep navy blue color steel facade panels on building exterior wall, dark blue architectural cladding, modern office style" },
-  { id:"c4", name:"모스그린",             cat:"컬러강판", hex:"#4d6b44", energySave:16, co2:11.2, prompt:"moss green color coated steel wall cladding panels on building exterior, eco green architectural facade, natural tone" },
-  { id:"c5", name:"차콜블랙",             cat:"컬러강판", hex:"#2e3238", energySave:7,  co2:4.9,  prompt:"charcoal black matte color steel panels on building exterior wall, dark grey architectural cladding, industrial style" },
-  { id:"c6", name:"브릭레드",             cat:"컬러강판", hex:"#8b3a2a", energySave:9,  co2:6.3,  prompt:"brick red color coated steel facade panels on building exterior wall, warm red architectural cladding" },
-  { id:"c7", name:"샌드베이지",           cat:"컬러강판", hex:"#c4b49a", energySave:22, co2:15.4, prompt:"sand beige color steel wall cladding panels on building exterior, warm neutral architectural facade, residential style" },
-  { id:"c8", name:"테라코타",             cat:"컬러강판", hex:"#c06a45", energySave:12, co2:8.4,  prompt:"terracotta orange color coated steel facade panels on building exterior wall, warm orange architectural cladding" },
-  { id:"c9", name:"올리브골드",           cat:"컬러강판", hex:"#8a8440", energySave:15, co2:10.5, prompt:"olive gold color steel panels on building exterior wall, golden green architectural facade cladding, premium style" },
-  { id:"c10",name:"포레스트그린",         cat:"컬러강판", hex:"#2d4a35", energySave:17, co2:11.9, prompt:"forest green color coated steel wall cladding panels on building exterior, deep green ESG architectural facade" },
-  { id:"c11",name:"코퍼로즈",            cat:"컬러강판", hex:"#b87b6e", energySave:13, co2:9.1,  prompt:"copper rose color steel facade panels on building exterior wall, warm pink copper tone architectural cladding" },
-  { id:"c12",name:"와인레드",            cat:"컬러강판", hex:"#6b2737", energySave:8,  co2:5.6,  prompt:"wine red color coated steel panels on building exterior wall, deep red architectural cladding, landmark style" },
+  { id:"g1", name:"PosMAC® 아이언그레이",  cat:"도금강판", hex:"#6b7280", energySave:12, co2:8.4,  prompt:MAKE_PROMPT("iron gray","metallic zinc-aluminum alloy") },
+  { id:"g2", name:"PosMAC® 실버메탈",      cat:"도금강판", hex:"#c0cad2", energySave:14, co2:9.8,  prompt:MAKE_PROMPT("shiny silver","metallic aluminum-zinc") },
+  { id:"g3", name:"PosMAC® 샴페인골드",    cat:"도금강판", hex:"#c9a96e", energySave:10, co2:7.1,  prompt:MAKE_PROMPT("champagne gold","metallic steel") },
+  { id:"g4", name:"PosMAC® 브론즈메탈",    cat:"도금강판", hex:"#7d5a3c", energySave:11, co2:7.7,  prompt:MAKE_PROMPT("warm bronze","metallic steel") },
+  { id:"g5", name:"갈바륨 내추럴실버",     cat:"도금강판", hex:"#a8b4b8", energySave:13, co2:9.1,  prompt:MAKE_PROMPT("natural silver matte","galvalume steel") },
+  { id:"c1", name:"쿨루프 크림화이트",     cat:"컬러강판", hex:"#f2ede4", energySave:28, co2:19.6, prompt:MAKE_PROMPT("cream white","color coated cool roof") },
+  { id:"c2", name:"스카이블루",            cat:"컬러강판", hex:"#4a90c4", energySave:18, co2:12.6, prompt:MAKE_PROMPT("sky blue","PVDF color coated") },
+  { id:"c3", name:"딥네이비",             cat:"컬러강판", hex:"#1e2d5a", energySave:8,  co2:5.6,  prompt:MAKE_PROMPT("deep navy blue","color coated") },
+  { id:"c4", name:"모스그린",             cat:"컬러강판", hex:"#4d6b44", energySave:16, co2:11.2, prompt:MAKE_PROMPT("moss green","eco color coated") },
+  { id:"c5", name:"차콜블랙",             cat:"컬러강판", hex:"#2e3238", energySave:7,  co2:4.9,  prompt:MAKE_PROMPT("charcoal black matte","color coated") },
+  { id:"c6", name:"브릭레드",             cat:"컬러강판", hex:"#8b3a2a", energySave:9,  co2:6.3,  prompt:MAKE_PROMPT("brick red","color coated") },
+  { id:"c7", name:"샌드베이지",           cat:"컬러강판", hex:"#c4b49a", energySave:22, co2:15.4, prompt:MAKE_PROMPT("sand beige","color coated") },
+  { id:"c8", name:"테라코타",             cat:"컬러강판", hex:"#c06a45", energySave:12, co2:8.4,  prompt:MAKE_PROMPT("terracotta orange","color coated") },
+  { id:"c9", name:"올리브골드",           cat:"컬러강판", hex:"#8a8440", energySave:15, co2:10.5, prompt:MAKE_PROMPT("olive gold","color coated") },
+  { id:"c10",name:"포레스트그린",         cat:"컬러강판", hex:"#2d4a35", energySave:17, co2:11.9, prompt:MAKE_PROMPT("forest green","eco color coated") },
+  { id:"c11",name:"코퍼로즈",            cat:"컬러강판", hex:"#b87b6e", energySave:13, co2:9.1,  prompt:MAKE_PROMPT("copper rose","color coated") },
+  { id:"c12",name:"와인레드",            cat:"컬러강판", hex:"#6b2737", energySave:8,  co2:5.6,  prompt:MAKE_PROMPT("wine red","color coated") },
 ];
 
 const EXAMPLES = [
@@ -34,34 +37,12 @@ async function urlToFile(url: string): Promise<File> {
   return new File([blob], "building.jpg", { type: blob.type || "image/jpeg" });
 }
 
-async function resizeImageFile(file: File): Promise<File> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX_RATIO = 2.3;
-      let w = img.width;
-      let h = img.height;
-      if (w / h > MAX_RATIO) w = Math.floor(h * MAX_RATIO);
-      if (h / w > MAX_RATIO) h = Math.floor(w * MAX_RATIO);
-      const canvas = document.createElement("canvas");
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0, w, h);
-      canvas.toBlob((blob) => {
-        resolve(new File([blob!], "building.jpg", { type: "image/jpeg" }));
-      }, "image/jpeg", 0.92);
-    };
-    img.src = URL.createObjectURL(file);
-  });
-}
-
 async function searchAndReplace(imageFile: File, productPrompt: string, apiKey: string): Promise<string> {
   const form = new FormData();
   form.append("image", imageFile);
-  form.append("prompt", productPrompt + ", photorealistic, architectural photography, high quality, 8k");
-  form.append("search_prompt", "building exterior wall, facade, cladding, wall surface");
-  form.append("negative_prompt", "blurry, low quality, cartoon, windows, sky, ground, trees");
+  form.append("prompt", productPrompt + ", photorealistic, architectural photography, high quality, preserve all windows and doors");
+  form.append("search_prompt", "exterior wall surface cladding facade material");
+  form.append("negative_prompt", "remove windows, remove doors, change building shape, change structure, blurry, cartoon, low quality");
   form.append("output_format", "jpeg");
 
   const res = await fetch("/api/stability-proxy", {
@@ -107,8 +88,7 @@ export default function App() {
     setSelectedProduct(product);
     try {
       setStatusMsg("🔄 이미지 준비 중...");
-      const rawFile = uploadedFile || await urlToFile(activeBuilding.url);
-      const file = await resizeImageFile(rawFile);
+      const file = uploadedFile || await urlToFile(activeBuilding.url);
       setStatusMsg("🎨 Stability AI가 외벽을 새로 그리는 중... (10~30초)");
       const result = await searchAndReplace(file, product.prompt, apiKey);
       setAfterUrl(result);
