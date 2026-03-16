@@ -85,6 +85,17 @@ const EXAMPLES = [
   },
 ];
 
+
+// 실제 스틸리온 시공사례
+const CASES = [
+  { id:"c1", name:"스타벅스 남양주삼패점", product:"목재무늬강판", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=600&q=80", tag:"상업시설" },
+  { id:"c2", name:"포스코퓨처엠 포항 양극재 공장", product:"PosMAC® 실버메탈", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=600&q=80", tag:"산업시설" },
+  { id:"c3", name:"코트야드 메리어트 서울 판교", product:"PosMAC® 샴페인골드", img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80", tag:"호텔" },
+  { id:"c4", name:"광화문 광장 지하보도", product:"테라코타 컬러강판", img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=600&q=80", tag:"공공시설" },
+  { id:"c5", name:"전국 LCT 랜드마크타워", product:"딥네이비 컬러강판", img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=600&q=80", tag:"주거시설" },
+  { id:"c6", name:"KT파크빌딩", product:"갈바륨 내추럴실버", img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=600&q=80", tag:"업무시설" },
+];
+
 async function fetchWithCors(url: string): Promise<Blob> {
   // Try direct fetch first
   try {
@@ -138,7 +149,7 @@ async function searchAndReplace(imageFile: File, productPrompt: string, apiKey: 
 
   const res = await fetch("/api/stability-proxy", {
     method: "POST",
-    headers: { "X-Stability-Key": apiKey, "Accept": "image/*" },
+    headers: { "X-Stability-Key": apiKey, "Accept": "image/*", "X-Stability-Mode": "structure" },
     body: form,
   });
 
@@ -166,6 +177,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [filterCat, setFilterCat]   = useState("전체");
 
+  const [showCases, setShowCases] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
   const fileRef   = useRef<HTMLInputElement>(null);
 
@@ -310,14 +322,15 @@ export default function App() {
         </div>
 
         {/* CENTER */}
-        <div style={{ flex:1,display:"flex",flexDirection:"column" as const,overflow:"hidden",minWidth:0 }}>
+        <div style={{ flex:1,display:"flex",flexDirection:"column" as const,overflow:"hidden",minWidth:0,position:"relative" as const }}>
           <div style={{ height:40,flexShrink:0,background:afterUrl&&!processing?"#0d2d1a":error?"#2d0a0a":processing?"#0d1b2e":"#111419",borderBottom:"1px solid #1e2530",display:"flex",alignItems:"center",padding:"0 16px",gap:10 }}>
             {processing&&<div style={{ width:15,height:15,borderRadius:"50%",border:"2px solid #1e3a5f",borderTop:"2px solid #3b82f6",animation:"spin 0.8s linear infinite",flexShrink:0 }}/>}
             <span style={{ fontSize:12,fontWeight:500,color:error?"#f87171":afterUrl&&!processing?"#4ade80":processing?"#60a5fa":"#4a5568" }}>
               {error||statusMsg||(apiKeySet?"오른쪽에서 제품을 선택하면 AI가 자동으로 외관을 바꿔드립니다 🎨":"🔑 상단에 Stability AI API 키를 먼저 입력하세요")}
             </span>
+            <button onClick={()=>setShowCases(true)} style={{ marginLeft:"auto", background:"#161b22", border:"1px solid #21262d", borderRadius:5, padding:"4px 12px", fontSize:11, color:"#8b949e", cursor:"pointer", fontWeight:600, flexShrink:0 }}>📸 실제 시공사례</button>
             {afterUrl&&!processing&&(
-              <a href={afterUrl} download="steelion-result.jpg" style={{ marginLeft:"auto",background:"#166534",border:"1px solid #22c55e",borderRadius:5,padding:"4px 12px",fontSize:11,color:"#4ade80",fontWeight:600,textDecoration:"none" }}>⬇ 저장</a>
+              <a href={afterUrl} download="steelion-result.jpg" style={{ marginLeft:"8px",background:"#166534",border:"1px solid #22c55e",borderRadius:5,padding:"4px 12px",fontSize:11,color:"#4ade80",fontWeight:600,textDecoration:"none" }}>⬇ 저장</a>
             )}
           </div>
 
@@ -379,6 +392,41 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {/* CASES OVERLAY */}
+        {showCases && (
+          <div style={{ position:"absolute" as const, inset:0, background:"rgba(4,5,6,0.95)", zIndex:30, display:"flex", flexDirection:"column" as const, overflow:"hidden", animation:"fadeIn 0.3s ease" }}>
+            <div style={{ padding:"16px 20px", borderBottom:"1px solid #1e2530", display:"flex", alignItems:"center", justifyContent:"space-between", flexShrink:0 }}>
+              <div>
+                <div style={{ fontSize:14, fontWeight:700, color:"#e8edf3" }}>📸 실제 시공사례</div>
+                <div style={{ fontSize:11, color:"#4a5568", marginTop:2 }}>포스코 스틸리온 제품 적용 건축물</div>
+              </div>
+              <button onClick={()=>setShowCases(false)} style={{ background:"#161b22", border:"1px solid #21262d", borderRadius:7, padding:"6px 14px", fontSize:12, color:"#8b949e", cursor:"pointer", fontWeight:600 }}>✕ 닫기</button>
+            </div>
+            <div style={{ flex:1, overflow:"auto", padding:"20px" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))", gap:16 }}>
+                {CASES.map(c => (
+                  <div key={c.id} style={{ background:"#0d1117", border:"1px solid #1e2530", borderRadius:12, overflow:"hidden" }}>
+                    <div style={{ height:180, overflow:"hidden", position:"relative" as const }}>
+                      <img src={c.img} alt={c.name} style={{ width:"100%", height:"100%", objectFit:"cover" as const, display:"block" }} onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80";}}/>
+                      <div style={{ position:"absolute" as const, top:10, left:10, background:"rgba(37,99,235,0.9)", borderRadius:5, padding:"3px 9px", fontSize:10, fontWeight:700, color:"#fff" }}>{c.tag}</div>
+                    </div>
+                    <div style={{ padding:"14px 16px" }}>
+                      <div style={{ fontSize:13, fontWeight:700, color:"#e8edf3", marginBottom:6, lineHeight:1.4 }}>{c.name}</div>
+                      <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                        <span style={{ fontSize:10, color:"#4a5568" }}>적용 제품:</span>
+                        <span style={{ fontSize:10, fontWeight:600, color:"#60a5fa", background:"#0d1b2e", border:"1px solid #1d4ed8", borderRadius:4, padding:"1px 7px" }}>{c.product}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop:24, padding:"16px 20px", background:"#0d1b2e", border:"1px solid #1d4ed8", borderRadius:12, fontSize:12, color:"#93c5fd", lineHeight:1.7 }}>
+                💡 <strong>참고:</strong> 위 사진은 실제 포스코 스틸리온 제품이 적용된 건축물 예시입니다. 왼쪽의 AI 시뮬레이터로 여러분의 건물에 직접 적용해보세요!
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* RIGHT */}
         <div style={{ width:280,flexShrink:0,background:"#0d1117",borderLeft:"1px solid #1e2530",display:"flex",flexDirection:"column" as const,overflow:"hidden" }}>
