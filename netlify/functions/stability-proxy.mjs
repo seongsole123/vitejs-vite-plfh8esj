@@ -13,8 +13,10 @@ export default async (request) => {
     const stabilityKey = request.headers.get("X-Stability-Key");
     const formData = await request.formData();
 
+    // Structure Control: 건물 엣지/윤곽선을 추출해서 유지 → 재질만 교체
+    // control_strength 0.92 = 원본 구조 92% 유지
     const response = await fetch(
-      "https://api.stability.ai/v2beta/stable-image/edit/search-and-replace",
+      "https://api.stability.ai/v2beta/stable-image/control/structure",
       {
         method: "POST",
         headers: {
