@@ -190,8 +190,12 @@ export default function App() {
       setStatusMsg("🔄 이미지 준비 중...");
       const rawFile = uploadedFile || await urlToFile(activeExample.url);
       const file = await resizeImageFile(rawFile);
-      setStatusMsg("🎨 Stability AI가 외관을 새로 그리는 중... (10~30초)");
-      const result = await searchAndReplace(file, product.prompt, apiKey);
+
+      setStatusMsg("🤖 Claude AI가 건물 영역을 감지하는 중...");
+      const maskDataUrl = await createBuildingMask(file);
+
+      setStatusMsg("🎨 Stability AI가 건물 외관만 바꾸는 중... (10~30초)");
+      const result = await inpaintBuilding(file, maskDataUrl, product.prompt, apiKey);
       setAfterUrl(result);
       setStatusMsg(`✓ ${product.name} 적용 완료!`);
     } catch (e: any) {
