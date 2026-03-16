@@ -139,17 +139,83 @@ async function resizeImageFile(file: File): Promise<File> {
   });
 }
 
-async function searchAndReplace(imageFile: File, productPrompt: string, apiKey: string): Promise<string> {
+async function createBuildingMask(imageFile: File): Promise<string> {
+  const base64 = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve((reader.result as string).split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(imageFile);
+  });
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{
+        role: "user",
+        content: [
+          { type: "image", source: { type: "base64", media_type: "image/jpeg", data: base64 } },
+          { type: "text", text: "이 이미지에서 건물(빌딩) 전체 외곽선을 폴리곤으로 추출하세요. 하늘, 땅, 나무, 도로, 자동차, 사람은 제외하고 건물 전체만 포함하세요. JSON으로만 응답(마크다운 없이): {"polygons":[ [[x1,y1],[x2,y2],...] ]} 좌표는 이미지 크기 대비 0~100 퍼센트." }
+        ]
+      }]
+    })
+  });
+
+  const data = await res.json();
+  const text = data.content?.find((b: any) => b.type === "text")?.text || "{}";
+  const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+  const polygons: number[][][] = parsed.polygons || [];
+
+  const img = await new Promise<HTMLImageElement>((resolve) => {
+    const i = new Image();
+    i.onload = () => resolve(i);
+    i.src = URL.createObjectURL(imageFile);
+  });
+
+  const canvas = document.createElement("canvas");
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  polygons.forEach((polygon) => {
+    if (!polygon || polygon.length < 3) return;
+    ctx.beginPath();
+    ctx.moveTo((polygon[0][0] / 100) * canvas.width, (polygon[0][1] / 100) * canvas.height);
+    for (let i = 1; i < polygon.length; i++) {
+      ctx.lineTo((polygon[i][0] / 100) * canvas.width, (polygon[i][1] / 100) * canvas.height);
+    }
+    ctx.closePath();
+    ctx.fill();
+  });
+  return canvas.toDataURL("image/png");
+}
+
+function dataUrlToFile(dataUrl: string, name: string): File {
+  const arr = dataUrl.split(",");
+  const mime = arr[0].match(/:(.*?);/)![1];
+  const bstr = atob(arr[1]);
+  const u8arr = new Uint8Array(bstr.length);
+  for (let i = 0; i < bstr.length; i++) u8arr[i] = bstr.charCodeAt(i);
+  return new File([u8arr], name, { type: mime });
+}
+
+async function inpaintBuilding(imageFile: File, maskDataUrl: string, productPrompt: string, apiKey: string): Promise<string> {
+  const maskFile = dataUrlToFile(maskDataUrl, "mask.png");
   const form = new FormData();
   form.append("image", imageFile);
-  form.append("prompt", productPrompt + ", photorealistic, 8k, high quality");
-  form.append("search_prompt", "exterior surface wall facade cladding material coating");
-  form.append("negative_prompt", "missing windows, removed doors, different structure, blurry, cartoon, low quality, distorted proportions");
+  form.append("mask", maskFile);
+  form.append("prompt", productPrompt + ", photorealistic architectural photo, 8k, high quality, same building structure, keep windows and doors");
+  form.append("negative_prompt", "missing windows, removed doors, changed building shape, blurry, cartoon, low quality");
   form.append("output_format", "jpeg");
+  form.append("grow_mask", "4");
 
   const res = await fetch("/api/stability-proxy", {
     method: "POST",
-    headers: { "X-Stability-Key": apiKey, "Accept": "image/*", "X-Stability-Mode": "structure" },
+    headers: { "X-Stability-Key": apiKey, "Accept": "image/*", "X-Stability-Mode": "inpaint" },
     body: form,
   });
 
