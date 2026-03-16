@@ -34,6 +34,28 @@ async function urlToFile(url: string): Promise<File> {
   return new File([blob], "building.jpg", { type: blob.type || "image/jpeg" });
 }
 
+async function resizeImageFile(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX_RATIO = 2.3;
+      let w = img.width;
+      let h = img.height;
+      if (w / h > MAX_RATIO) w = Math.floor(h * MAX_RATIO);
+      if (h / w > MAX_RATIO) h = Math.floor(w * MAX_RATIO);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob((blob) => {
+        resolve(new File([blob!], "building.jpg", { type: "image/jpeg" }));
+      }, "image/jpeg", 0.92);
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
 async function searchAndReplace(imageFile: File, productPrompt: string, apiKey: string): Promise<string> {
   const form = new FormData();
   form.append("image", imageFile);
@@ -85,7 +107,8 @@ export default function App() {
     setSelectedProduct(product);
     try {
       setStatusMsg("🔄 이미지 준비 중...");
-      const file = uploadedFile || await urlToFile(activeBuilding.url);
+      const rawFile = uploadedFile || await urlToFile(activeBuilding.url);
+      const file = await resizeImageFile(rawFile);
       setStatusMsg("🎨 Stability AI가 외벽을 새로 그리는 중... (10~30초)");
       const result = await searchAndReplace(file, product.prompt, apiKey);
       setAfterUrl(result);
