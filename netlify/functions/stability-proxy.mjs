@@ -4,48 +4,26 @@ export default async (request) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, X-Stability-Key, X-Stability-Mode, X-Claude-Key",
+        "Access-Control-Allow-Headers": "Content-Type, X-Stability-Key",
       },
     });
   }
 
   try {
-    const mode = request.headers.get("X-Stability-Mode") || "inpaint";
-
-    // Claude API proxy (for building mask detection)
-    if (mode === "claude") {
-      // Use env variable if available, fallback to header
-      const claudeKey = process.env.ANTHROPIC_API_KEY || request.headers.get("X-Claude-Key");
-      const body = await request.json();
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": claudeKey,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify(body),
-      });
-      const data = await response.json();
-      return new Response(JSON.stringify(data), {
-        status: response.status,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
-    }
-
-    // Stability AI proxy
     const stabilityKey = request.headers.get("X-Stability-Key");
     const formData = await request.formData();
 
-    const endpoint = mode === "inpaint"
-      ? "https://api.stability.ai/v2beta/stable-image/edit/inpaint"
-      : "https://api.stability.ai/v2beta/stable-image/edit/search-and-replace";
-
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${stabilityKey}`, Accept: "image/*" },
-      body: formData,
-    });
+    const response = await fetch(
+      "https://api.stability.ai/v2beta/stable-image/edit/search-and-replace",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${stabilityKey}`,
+          Accept: "image/*",
+        },
+        body: formData,
+      }
+    );
 
     if (!response.ok) {
       const err = await response.text();
