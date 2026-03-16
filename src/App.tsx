@@ -157,7 +157,7 @@ async function createBuildingMask(imageFile: File): Promise<string> {
         role: "user",
         content: [
           { type: "image", source: { type: "base64", media_type: "image/jpeg", data: base64 } },
-          { type: "text", text: "이 이미지에서 건물(빌딩) 전체 외곽선을 폴리곤으로 추출하세요. 하늘, 땅, 나무, 도로, 자동차, 사람은 제외하고 건물 전체만 포함하세요. JSON으로만 응답(마크다운 없이): {"polygons":[ [[x1,y1],[x2,y2],...] ]} 좌표는 이미지 크기 대비 0~100 퍼센트." }
+          { type: "text", text: `이 이미지에서 건물(빌딩) 전체 외곽선을 폴리곤으로 추출하세요. 하늘, 땅, 나무, 도로, 자동차, 사람은 제외하고 건물 전체만 포함하세요. JSON으로만 응답(마크다운 없이): {"polygons":[ [[x1,y1],[x2,y2],...] ]} 좌표는 이미지 크기 대비 0~100 퍼센트.` }
         ]
       }]
     })
