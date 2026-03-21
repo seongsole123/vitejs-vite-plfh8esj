@@ -27,20 +27,17 @@ const PRODUCTS = [
   { id:"w6", name:"체스넛 (5GTM39)",   cat:"목재무늬강판", hex:"#7a4a25", energySave:10, co2:7.0,  desc:"따뜻한 체스넛. 전통과 현대의 조화.", features:["전통 감성","따뜻한 색감","한옥 주변","문화재"] },
 ];
 
-// 실제 검증된 스틸리온 시공사례 (링크 = 스틸리온 공식 제품 페이지)
-const STEELION_URL = "https://www.poscosteeleon.com/product/intro.do";
-
-const CASES = {
-  building: [
-    { name:"스타벅스 남양주삼패점",  product:"목재무늬강판",      tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80", url:STEELION_URL },
-    { name:"포스코퓨처엠 양극재 공장", product:"PosMAC® 실버메탈", tag:"산업시설", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80", url:STEELION_URL },
-    { name:"코트야드 메리어트 판교", product:"PosMAC® 샴페인골드", tag:"호텔",     img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80", url:STEELION_URL },
-    { name:"LCT 랜드마크타워",      product:"딥네이비 컬러강판",  tag:"주거복합", img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80", url:STEELION_URL },
-  ],
-  appliance: [
-    { name:"포스코 스틸리온 가전 소재", product:"PosMAC® 실버메탈", tag:"가전소재", img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80", url:STEELION_URL },
-  ],
-};
+// 제품 ID와 매칭된 시공사례 (productIds에 해당 제품 선택 시에만 표시)
+const CASES: Array<{name:string, tag:string, img:string, productIds:string[]}> = [
+  { name:"스타벅스 남양주삼패점",    tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80", productIds:["w1","w2","w3","w4","w5","w6"] },
+  { name:"포스코퓨처엠 양극재 공장", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80", productIds:["g1","g2","g5","c5"] },
+  { name:"코트야드 메리어트 판교",   tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80", productIds:["g3","g4","c7","c8","c9","c11"] },
+  { name:"LCT 랜드마크타워",        tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80", productIds:["c3","c5","g1"] },
+  { name:"광화문 광장 지하보도",     tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80", productIds:["c8","c6","c9"] },
+  { name:"KT파크빌딩",              tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80", productIds:["g5","g2","c2"] },
+  { name:"친환경 공공건물",          tag:"공공·ESG", img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80", productIds:["c1","c4","c10"] },
+  { name:"모던 오피스 빌딩",        tag:"업무시설",  img:"https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80", productIds:["c3","c2","g2","g1"] },
+];
 
 // 용도 키워드로 카테고리 자동 판별
 function detectCategory(purpose: string): "building" | "appliance" {
@@ -422,27 +419,29 @@ export default function App() {
                 )}
               </div>
 
-              {/* Cases */}
-              <div>
-                <div style={{fontSize:13,fontWeight:700,color:"#e8edf3",marginBottom:12}}>📸 실제 시공사례</div>
-                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
-                  {CASES[caseCategory].map((c,i)=>(
-                    <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",display:"block",background:"#0d1117",border:"1px solid #1e2530",borderRadius:10,overflow:"hidden",transition:"border-color 0.15s",cursor:"pointer"}}
-                      onMouseEnter={e=>(e.currentTarget.style.borderColor="#2563eb")}
-                      onMouseLeave={e=>(e.currentTarget.style.borderColor="#1e2530")}>
-                      <div style={{height:120,overflow:"hidden",position:"relative" as const}}>
-                        <img src={c.img} alt={c.name} style={{width:"100%",height:"100%",objectFit:"cover" as const}} onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80";}}/>
-                        <div style={{position:"absolute" as const,top:7,left:7,background:"rgba(37,99,235,0.9)",borderRadius:4,padding:"2px 7px",fontSize:9,fontWeight:700,color:"#fff"}}>{c.tag}</div>
-                        <div style={{position:"absolute" as const,top:7,right:7,background:"rgba(0,0,0,0.6)",borderRadius:4,padding:"2px 7px",fontSize:9,color:"#8b949e"}}>↗ 자세히</div>
-                      </div>
-                      <div style={{padding:"10px 12px"}}>
-                        <div style={{fontSize:11,fontWeight:700,color:"#e8edf3",marginBottom:4,lineHeight:1.3}}>{c.name}</div>
-                        <div style={{fontSize:10,color:"#60a5fa",background:"#0d1b2e",borderRadius:3,padding:"1px 6px",display:"inline-block"}}>{c.product}</div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
+              {/* Cases - 선택된 제품과 매칭된 사례만 표시 */}
+              {(() => {
+                const matched = CASES.filter(c => c.productIds.includes(selectedProduct.id));
+                if (matched.length === 0) return null;
+                return (
+                  <div>
+                    <div style={{fontSize:13,fontWeight:700,color:"#e8edf3",marginBottom:12}}>📸 유사 시공사례</div>
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
+                      {matched.map((c,i)=>(
+                        <div key={i} style={{background:"#0d1117",border:"1px solid #1e2530",borderRadius:10,overflow:"hidden"}}>
+                          <div style={{height:120,overflow:"hidden",position:"relative" as const}}>
+                            <img src={c.img} alt={c.name} style={{width:"100%",height:"100%",objectFit:"cover" as const}} onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80";}}/>
+                            <div style={{position:"absolute" as const,top:7,left:7,background:"rgba(37,99,235,0.9)",borderRadius:4,padding:"2px 7px",fontSize:9,fontWeight:700,color:"#fff"}}>{c.tag}</div>
+                          </div>
+                          <div style={{padding:"10px 12px"}}>
+                            <div style={{fontSize:11,fontWeight:700,color:"#e8edf3",lineHeight:1.3}}>{c.name}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           ) : (
             <div style={{flex:1,display:"flex",flexDirection:"column" as const,alignItems:"center",justifyContent:"center",gap:14,textAlign:"center" as const,padding:"40px",color:"#2d3748"}}>
