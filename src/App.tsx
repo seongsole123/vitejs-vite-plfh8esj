@@ -27,14 +27,32 @@ const PRODUCTS = [
   { id:"w6", name:"체스넛 (5GTM39)",   cat:"목재무늬강판", hex:"#7a4a25", energySave:10, co2:7.0,  desc:"따뜻한 체스넛. 전통과 현대의 조화.", features:["전통 감성","따뜻한 색감","한옥 주변","문화재"] },
 ];
 
-const CASES = [
-  { name:"스타벅스 남양주삼패점",    product:"월넛브라운",      tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80" },
-  { name:"포스코퓨처엠 공장",       product:"PosMAC® 실버메탈", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80" },
-  { name:"코트야드 메리어트 판교",   product:"샴페인골드",       tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80" },
-  { name:"광화문 광장 지하보도",     product:"테라코타",         tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80" },
-  { name:"LCT 랜드마크타워",        product:"딥네이비",         tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80" },
-  { name:"KT파크빌딩",              product:"갈바륨 내추럴실버", tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80" },
-];
+const CASES = {
+  building: [
+    { name:"스타벅스 남양주삼패점",  product:"월넛브라운",       tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80" },
+    { name:"포스코퓨처엠 공장",      product:"PosMAC® 실버메탈", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80" },
+    { name:"코트야드 메리어트 판교", product:"샴페인골드",        tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80" },
+    { name:"광화문 광장 지하보도",   product:"테라코타",          tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80" },
+    { name:"LCT 랜드마크타워",      product:"딥네이비",          tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80" },
+    { name:"KT파크빌딩",            product:"갈바륨 내추럴실버", tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80" },
+  ],
+  appliance: [
+    { name:"삼성 비스포크 냉장고",   product:"크림화이트 컬러강판", tag:"냉장고",   img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80" },
+    { name:"LG 트롬 세탁기",        product:"PosMAC® 실버메탈",   tag:"세탁기",   img:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&q=80" },
+    { name:"프리미엄 주방 인테리어", product:"샴페인골드",          tag:"주방",     img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80" },
+    { name:"스틸 에어컨 외장",      product:"아이언그레이",        tag:"에어컨",   img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" },
+    { name:"산업용 기계 외장",      product:"갈바륨 내추럴실버",   tag:"산업기계", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80" },
+    { name:"모던 주방 가전",        product:"딥네이비 컬러강판",   tag:"주방가전", img:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400&q=80" },
+  ],
+};
+
+// 용도 키워드로 카테고리 자동 판별
+function detectCategory(purpose: string): "building" | "appliance" {
+  const applianceKeywords = ["냉장고","세탁기","에어컨","가전","주방","기계","자동차","차량","오토바이","자전거","제품","기기","장치","설비"];
+  const lower = purpose.toLowerCase();
+  if (applianceKeywords.some(k => lower.includes(k))) return "appliance";
+  return "building";
+}
 
 /* ─── COLOR UTILS ──────────────────────────────────────────────── */
 function hexToRgb(hex: string) {
@@ -54,29 +72,42 @@ function colorDistance(h1:string, h2:string) {
 
 function extractColors(img: HTMLImageElement, count=6): string[] {
   const canvas = document.createElement("canvas");
-  const size = 80;
+  const size = 120;
   canvas.width = size; canvas.height = size;
   const ctx = canvas.getContext("2d")!;
   ctx.drawImage(img, 0, 0, size, size);
   const data = ctx.getImageData(0,0,size,size).data;
 
-  // Sample pixels
-  const pixels: [number,number,number][] = [];
-  for (let i=0; i<data.length; i+=16) {
-    const r=data[i], g=data[i+1], b=data[i+2], a=data[i+3];
-    if (a < 128) continue;
-    // Quantize to reduce similar colors
-    pixels.push([Math.round(r/16)*16, Math.round(g/16)*16, Math.round(b/16)*16]);
+  const cx = size / 2, cy = size / 2;
+  const maxDist = size * 0.7;
+
+  // 중앙 집중 가중치 샘플링 (주인공 색상 위주)
+  const weightedPixels: Array<{rgb:[number,number,number], weight:number}> = [];
+  for (let y=0; y<size; y++) {
+    for (let x=0; x<size; x++) {
+      const i = (y*size+x)*4;
+      const r=data[i], g=data[i+1], b=data[i+2], a=data[i+3];
+      if (a < 128) continue;
+      // 배경색 제외 (너무 밝거나 채도 없는 흰색/하늘색/회색 제외)
+      const max=Math.max(r,g,b), min=Math.min(r,g,b);
+      const saturation = max===0 ? 0 : (max-min)/max;
+      // 무채색(채도<0.08)이고 밝은 색은 배경일 가능성 높음 → 낮은 가중치
+      const isBg = saturation < 0.08 && (r+g+b)/3 > 200;
+      // 중앙에 가까울수록 높은 가중치
+      const dist = Math.sqrt((x-cx)**2+(y-cy)**2);
+      const centerWeight = Math.max(0, 1 - dist/maxDist);
+      const weight = isBg ? centerWeight * 0.1 : centerWeight * 1.0 + 0.3;
+      weightedPixels.push({rgb:[Math.round(r/20)*20, Math.round(g/20)*20, Math.round(b/20)*20], weight});
+    }
   }
 
-  // Count frequency
+  // 가중치 기반 빈도 계산
   const freq: Record<string,number> = {};
-  pixels.forEach(([r,g,b])=>{
+  weightedPixels.forEach(({rgb:[r,g,b], weight})=>{
     const k=`${r},${g},${b}`;
-    freq[k]=(freq[k]||0)+1;
+    freq[k]=(freq[k]||0)+weight;
   });
 
-  // Sort by frequency, pick diverse colors
   const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
   const picked: string[] = [];
 
@@ -84,8 +115,7 @@ function extractColors(img: HTMLImageElement, count=6): string[] {
     if (picked.length >= count) break;
     const [r,g,b] = key.split(",").map(Number);
     const hex = rgbToHex(r,g,b);
-    // Skip if too similar to already picked
-    if (picked.every(p => colorDistance(p, hex) > 40)) {
+    if (picked.every(p => colorDistance(p, hex) > 35)) {
       picked.push(hex);
     }
   }
@@ -107,6 +137,7 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0]|null>(null);
   const [filterCat, setFilterCat]   = useState("전체");
   const [isExtracting, setIsExtracting] = useState(false);
+  const [caseCategory, setCaseCategory] = useState<"building"|"appliance">("building");
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -128,6 +159,7 @@ export default function App() {
 
   const handleStart = () => {
     if (!uploadedUrl || !purpose.trim()) return;
+    setCaseCategory(detectCategory(purpose));
     setStep("result");
   };
 
@@ -367,7 +399,7 @@ export default function App() {
               <div>
                 <div style={{fontSize:13,fontWeight:700,color:"#e8edf3",marginBottom:12}}>📸 실제 시공사례</div>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
-                  {CASES.map((c,i)=>(
+                  {CASES[caseCategory].map((c,i)=>(
                     <div key={i} style={{background:"#0d1117",border:"1px solid #1e2530",borderRadius:10,overflow:"hidden"}}>
                       <div style={{height:120,overflow:"hidden",position:"relative" as const}}>
                         <img src={c.img} alt={c.name} style={{width:"100%",height:"100%",objectFit:"cover" as const}} onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80";}}/>
