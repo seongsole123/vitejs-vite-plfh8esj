@@ -4,42 +4,27 @@ export default async (request) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, X-Stability-Key",
+        "Access-Control-Allow-Headers": "Content-Type",
       },
     });
   }
-
   try {
-    const stabilityKey = request.headers.get("X-Stability-Key");
-    const formData = await request.formData();
-
-    // Structure Control: 건물 엣지/윤곽선을 추출해서 유지 → 재질만 교체
-    // control_strength 0.92 = 원본 구조 92% 유지
-    const response = await fetch(
-      "https://api.stability.ai/v2beta/stable-image/control/structure",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${stabilityKey}`,
-          Accept: "image/*",
-        },
-        body: formData,
-      }
-    );
-
-    if (!response.ok) {
-      const err = await response.text();
-      return new Response(JSON.stringify({ error: err }), {
-        status: response.status,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
-      });
-    }
-
-    const imageBuffer = await response.arrayBuffer();
-    return new Response(imageBuffer, {
-      headers: { "Content-Type": "image/jpeg", "Access-Control-Allow-Origin": "*" },
+    const body = await request.json();
+    const claudeKey = process.env.ANTHROPIC_API_KEY;
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": claudeKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify(body),
     });
-
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      status: response.status,
+      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+    });
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
       status: 500,
@@ -47,5 +32,4 @@ export default async (request) => {
     });
   }
 };
-
-export const config = { path: "/api/stability-proxy" };
+export const config = { path: "/api/claude-proxy" };
