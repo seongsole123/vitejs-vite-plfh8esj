@@ -27,22 +27,18 @@ const PRODUCTS = [
   { id:"w6", name:"체스넛 (5GTM39)",   cat:"목재무늬강판", hex:"#7a4a25", energySave:10, co2:7.0,  desc:"따뜻한 체스넛. 전통과 현대의 조화.", features:["전통 감성","따뜻한 색감","한옥 주변","문화재"] },
 ];
 
+// 실제 검증된 스틸리온 시공사례 (링크 = 스틸리온 공식 제품 페이지)
+const STEELION_URL = "https://www.poscosteeleon.com/product/intro.do";
+
 const CASES = {
   building: [
-    { name:"스타벅스 남양주삼패점",  product:"월넛브라운",       tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80", url:"https://www.steelion.co.kr" },
-    { name:"포스코퓨처엠 공장",      product:"PosMAC® 실버메탈", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80",  url:"https://www.steelion.co.kr" },
-    { name:"코트야드 메리어트 판교", product:"샴페인골드",        tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80", url:"https://www.steelion.co.kr" },
-    { name:"광화문 광장 지하보도",   product:"테라코타",          tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80",    url:"https://www.steelion.co.kr" },
-    { name:"LCT 랜드마크타워",      product:"딥네이비",          tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80",  url:"https://www.steelion.co.kr" },
-    { name:"KT파크빌딩",            product:"갈바륨 내추럴실버", tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80",  url:"https://www.steelion.co.kr" },
+    { name:"스타벅스 남양주삼패점",  product:"목재무늬강판",      tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80", url:STEELION_URL },
+    { name:"포스코퓨처엠 양극재 공장", product:"PosMAC® 실버메탈", tag:"산업시설", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80", url:STEELION_URL },
+    { name:"코트야드 메리어트 판교", product:"PosMAC® 샴페인골드", tag:"호텔",     img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80", url:STEELION_URL },
+    { name:"LCT 랜드마크타워",      product:"딥네이비 컬러강판",  tag:"주거복합", img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80", url:STEELION_URL },
   ],
   appliance: [
-    { name:"삼성 비스포크 냉장고",   product:"크림화이트 컬러강판", tag:"냉장고",   img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80", url:"https://www.steelion.co.kr" },
-    { name:"LG 트롬 세탁기",        product:"PosMAC® 실버메탈",   tag:"세탁기",   img:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&q=80",  url:"https://www.steelion.co.kr" },
-    { name:"프리미엄 주방 인테리어", product:"샴페인골드",          tag:"주방",     img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",    url:"https://www.steelion.co.kr" },
-    { name:"스틸 에어컨 외장",      product:"아이언그레이",        tag:"에어컨",   img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",    url:"https://www.steelion.co.kr" },
-    { name:"산업용 기계 외장",      product:"갈바륨 내추럴실버",   tag:"산업기계", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80",  url:"https://www.steelion.co.kr" },
-    { name:"모던 주방 가전",        product:"딥네이비 컬러강판",   tag:"주방가전", img:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400&q=80",    url:"https://www.steelion.co.kr" },
+    { name:"포스코 스틸리온 가전 소재", product:"PosMAC® 실버메탈", tag:"가전소재", img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80", url:STEELION_URL },
   ],
 };
 
