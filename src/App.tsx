@@ -29,20 +29,20 @@ const PRODUCTS = [
 
 const CASES = {
   building: [
-    { name:"스타벅스 남양주삼패점",  product:"월넛브라운",       tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80" },
-    { name:"포스코퓨처엠 공장",      product:"PosMAC® 실버메탈", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80" },
-    { name:"코트야드 메리어트 판교", product:"샴페인골드",        tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80" },
-    { name:"광화문 광장 지하보도",   product:"테라코타",          tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80" },
-    { name:"LCT 랜드마크타워",      product:"딥네이비",          tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80" },
-    { name:"KT파크빌딩",            product:"갈바륨 내추럴실버", tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80" },
+    { name:"스타벅스 남양주삼패점",  product:"월넛브라운",       tag:"카페·상업", img:"https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80", url:"https://www.steelion.co.kr" },
+    { name:"포스코퓨처엠 공장",      product:"PosMAC® 실버메탈", tag:"산업시설",  img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80",  url:"https://www.steelion.co.kr" },
+    { name:"코트야드 메리어트 판교", product:"샴페인골드",        tag:"호텔",      img:"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80", url:"https://www.steelion.co.kr" },
+    { name:"광화문 광장 지하보도",   product:"테라코타",          tag:"공공시설",  img:"https://images.unsplash.com/photo-1555636222-cae831e670b3?w=400&q=80",    url:"https://www.steelion.co.kr" },
+    { name:"LCT 랜드마크타워",      product:"딥네이비",          tag:"주거복합",  img:"https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=400&q=80",  url:"https://www.steelion.co.kr" },
+    { name:"KT파크빌딩",            product:"갈바륨 내추럴실버", tag:"업무시설",  img:"https://images.unsplash.com/photo-1464817739973-0128fe77aaa1?w=400&q=80",  url:"https://www.steelion.co.kr" },
   ],
   appliance: [
-    { name:"삼성 비스포크 냉장고",   product:"크림화이트 컬러강판", tag:"냉장고",   img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80" },
-    { name:"LG 트롬 세탁기",        product:"PosMAC® 실버메탈",   tag:"세탁기",   img:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&q=80" },
-    { name:"프리미엄 주방 인테리어", product:"샴페인골드",          tag:"주방",     img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80" },
-    { name:"스틸 에어컨 외장",      product:"아이언그레이",        tag:"에어컨",   img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" },
-    { name:"산업용 기계 외장",      product:"갈바륨 내추럴실버",   tag:"산업기계", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80" },
-    { name:"모던 주방 가전",        product:"딥네이비 컬러강판",   tag:"주방가전", img:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400&q=80" },
+    { name:"삼성 비스포크 냉장고",   product:"크림화이트 컬러강판", tag:"냉장고",   img:"https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400&q=80", url:"https://www.steelion.co.kr" },
+    { name:"LG 트롬 세탁기",        product:"PosMAC® 실버메탈",   tag:"세탁기",   img:"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&q=80",  url:"https://www.steelion.co.kr" },
+    { name:"프리미엄 주방 인테리어", product:"샴페인골드",          tag:"주방",     img:"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80",    url:"https://www.steelion.co.kr" },
+    { name:"스틸 에어컨 외장",      product:"아이언그레이",        tag:"에어컨",   img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",    url:"https://www.steelion.co.kr" },
+    { name:"산업용 기계 외장",      product:"갈바륨 내추럴실버",   tag:"산업기계", img:"https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=400&q=80",  url:"https://www.steelion.co.kr" },
+    { name:"모던 주방 가전",        product:"딥네이비 컬러강판",   tag:"주방가전", img:"https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=400&q=80",    url:"https://www.steelion.co.kr" },
   ],
 };
 
@@ -55,6 +55,35 @@ function detectCategory(purpose: string): "building" | "appliance" {
 }
 
 /* ─── COLOR UTILS ──────────────────────────────────────────────── */
+
+// 색상 이름 추정
+function getColorName(hex: string): string {
+  const {r,g,b} = hexToRgb(hex);
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  const brightness = (r+g+b)/3;
+  const saturation = max===0?0:(max-min)/max;
+
+  if (saturation < 0.12) {
+    if (brightness > 220) return "흰색";
+    if (brightness > 170) return "밝은회색";
+    if (brightness > 100) return "회색";
+    if (brightness > 50)  return "어두운회색";
+    return "검정";
+  }
+  const hue = Math.atan2(Math.sqrt(3)*(g-b), 2*r-g-b) * 180/Math.PI;
+  const h = hue < 0 ? hue+360 : hue;
+  const dark = brightness < 80 ? "어두운 " : brightness > 180 ? "밝은 " : "";
+  if (h < 20 || h >= 340) return dark+"빨간색";
+  if (h < 45)  return dark+"주황색";
+  if (h < 70)  return dark+"노란색";
+  if (h < 150) return dark+"초록색";
+  if (h < 195) return dark+"청록색";
+  if (h < 255) return dark+"파란색";
+  if (h < 290) return dark+"보라색";
+  if (h < 340) return dark+"분홍색";
+  return dark+"빨간색";
+}
+
 function hexToRgb(hex: string) {
   return {
     r: parseInt(hex.slice(1,3),16),
@@ -292,7 +321,7 @@ export default function App() {
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <div style={{width:48,height:48,borderRadius:8,background:selectedColor,flexShrink:0}}/>
                   <div>
-                    <div style={{fontSize:13,fontFamily:"monospace",color:"#e8edf3",fontWeight:700,marginBottom:4}}>{selectedColor}</div>
+                    <div style={{fontSize:13,color:"#e8edf3",fontWeight:700,marginBottom:4}}>{getColorName(selectedColor)}<span style={{fontSize:11,color:"#4a5568",fontFamily:"monospace",marginLeft:6}}>({selectedColor})</span></div>
                     <div style={{fontSize:11,color:getLuminance(selectedColor)>0.5?"#1a1a1a":"#e8edf3",background:selectedColor,borderRadius:4,padding:"2px 8px",display:"inline-block"}}>
                       {getLuminance(selectedColor)>0.6?"밝은 계열":getLuminance(selectedColor)<0.3?"어두운 계열":"중간 계열"}
                     </div>
@@ -349,7 +378,7 @@ export default function App() {
                     <div style={{padding:"12px 14px"}}>
                       <div style={{fontSize:11,color:"#60a5fa",marginBottom:4}}>스틸리온 제품</div>
                       <div style={{fontSize:13,fontWeight:700,color:"#e8edf3",marginBottom:4}}>{selectedProduct.name}</div>
-                      <div style={{fontSize:11,fontFamily:"monospace",color:"#4a5568"}}>{selectedProduct.hex}</div>
+                      <div style={{fontSize:11,color:"#6b7280"}}>{getColorName(selectedProduct.hex)}<span style={{fontSize:10,fontFamily:"monospace",color:"#4a5568",marginLeft:4}}>({selectedProduct.hex})</span></div>
                     </div>
                   </div>
                 </div>
@@ -377,6 +406,7 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+                {caseCategory === "building" && (
                 <div style={{background:"#0d2d1a",border:"1px solid #166534",borderRadius:10,padding:"14px 16px"}}>
                   <div style={{fontSize:11,fontWeight:700,color:"#22c55e",marginBottom:10,textTransform:"uppercase" as const,letterSpacing:"0.06em"}}>🌱 ESG 효과</div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
@@ -393,6 +423,7 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+                )}
               </div>
 
               {/* Cases */}
@@ -400,16 +431,19 @@ export default function App() {
                 <div style={{fontSize:13,fontWeight:700,color:"#e8edf3",marginBottom:12}}>📸 실제 시공사례</div>
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
                   {CASES[caseCategory].map((c,i)=>(
-                    <div key={i} style={{background:"#0d1117",border:"1px solid #1e2530",borderRadius:10,overflow:"hidden"}}>
+                    <a key={i} href={c.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none",display:"block",background:"#0d1117",border:"1px solid #1e2530",borderRadius:10,overflow:"hidden",transition:"border-color 0.15s",cursor:"pointer"}}
+                      onMouseEnter={e=>(e.currentTarget.style.borderColor="#2563eb")}
+                      onMouseLeave={e=>(e.currentTarget.style.borderColor="#1e2530")}>
                       <div style={{height:120,overflow:"hidden",position:"relative" as const}}>
                         <img src={c.img} alt={c.name} style={{width:"100%",height:"100%",objectFit:"cover" as const}} onError={e=>{(e.target as HTMLImageElement).src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80";}}/>
                         <div style={{position:"absolute" as const,top:7,left:7,background:"rgba(37,99,235,0.9)",borderRadius:4,padding:"2px 7px",fontSize:9,fontWeight:700,color:"#fff"}}>{c.tag}</div>
+                        <div style={{position:"absolute" as const,top:7,right:7,background:"rgba(0,0,0,0.6)",borderRadius:4,padding:"2px 7px",fontSize:9,color:"#8b949e"}}>↗ 자세히</div>
                       </div>
                       <div style={{padding:"10px 12px"}}>
                         <div style={{fontSize:11,fontWeight:700,color:"#e8edf3",marginBottom:4,lineHeight:1.3}}>{c.name}</div>
                         <div style={{fontSize:10,color:"#60a5fa",background:"#0d1b2e",borderRadius:3,padding:"1px 6px",display:"inline-block"}}>{c.product}</div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               </div>
